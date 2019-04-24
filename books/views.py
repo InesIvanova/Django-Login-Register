@@ -22,7 +22,6 @@ class UsersBooks(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'book_list.html'
     context_object_name = 'books'
-    #extra_context = {}
 
     def get_queryset(self):
         user_id = int(self.request.user.id)
@@ -32,3 +31,9 @@ class UsersBooks(LoginRequiredMixin, generic.ListView):
             return books
         except:
             return []
+
+    #this is if you want to sent more content than just the query set
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UsersBooks, self).get_context_data(**kwargs)
+        context['can_edit'] = True
+        return context
