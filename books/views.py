@@ -22,10 +22,13 @@ class UsersBooks(LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'book_list.html'
     context_object_name = 'books'
+    #extra_context = {}
 
     def get_queryset(self):
-        author_id = int(self.request.user.id)
-        print(type(author_id))
-        books = Book.objects.all().filter(author__pk=author_id)
-        print(books)
-        return books
+        user_id = int(self.request.user.id)
+        try:
+            author = Author.objects.all().filter(user__pk=user_id)[0]
+            books = Book.objects.all().filter(author=author.pk)
+            return books
+        except:
+            return []
